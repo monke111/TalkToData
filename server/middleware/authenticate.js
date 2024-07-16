@@ -1,14 +1,19 @@
-const jwt = require('jsonwebtoken');
-
-const authenticate = async(req, res, next) => {
-  try {
+const jwt = require("jsonwebtoken");
+const User = require("../schema/userSchema");
+const authenticate =async (req,res,next) =>
+{
+try{
     const token = req.cookies.jwtoken;
-    const decodedToken = jwt.verify(token, process.env.SECRET);
-    req.USER_ID = decodedToken.USER_ID;
+    const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
+    const rootUser = await User.findOne({_id:verifyToken._id,"tokens.token": token});
+    if(!rootUser){ throw new Error('User not Found')}
+    req.token = token;
+    req.rootUser = rootUser;
+    req.userID = rootUser._id;
     next();
-  } catch (error) {
-    console.error('Error verifying token:', error);
-    return res.status(401).json({ error: 'Unauthorized - Invalid token' });
-  }
-};
-module.exports = authenticate; 
+}catch(err){
+    res.status(401).send('Unauthorized:No Token Provided');
+    console.log(err);
+}
+}
+module.exports = authenticate;

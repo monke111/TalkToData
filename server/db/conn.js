@@ -1,12 +1,12 @@
-const mysql = require('mysql2');
-
-const db = mysql.createPool({
-    host: 'localhost',
-    user: process.env.USER,
-    password: process.env.PASS,
-    database: process.env.DB,
-});
-
-console.log("Connection successful to db");
-
-module.exports = db; 
+const mongoose= require('mongoose')
+const dotenv = require('dotenv')
+dotenv.config({path: './config.env' })
+mongoose.set('strictQuery', true);
+const db= process.env.DATABASE;
+mongoose.connect(db, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log("Connection Successful to Atlas");
+    console.log("========================");
+}).catch((err) => console.log("Connecton Error"));

@@ -7,6 +7,12 @@ const dotenv = require('dotenv')
 dotenv.config({path: './config.env' })
 
 
+const passport = require("passport");
+const passportStrategy = require("./passport");
+const mongoose =require("mongoose") 
+
+// Google Auth - passport
+app.use(passport.initialize());
 
 app.use(  
   cors({
@@ -16,6 +22,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
